@@ -8,8 +8,16 @@ editor_options:
 #1_4 Notes
 
 ```{r}
-
+library(tidyverse)
+rc17_six_county <- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/ReportCard2017/rc17_six_county.csv")
+rc17<- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/ReportCard2017/rc17.csv")
 ```
+
+```{r}
+test
+```
+
+
 
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
