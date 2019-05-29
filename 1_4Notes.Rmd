@@ -30,4 +30,28 @@ mchenry_types <- mchenry_only$dist_size_name
 mchenry_types
 ```
 
+Lake county ACT Scores (2017)
+```{r}
+lake_act <- rc17_six_county %>% filter(county == "Lake", is.na(ACT_COMP_SCHOOL) == FALSE )
+lake_act$ACT_COMP_SCHOOL
+ggplot(lake_act, aes(x = ACT_COMP_SCHOOL, y=.5)) +
+  geom_dotplot(dotsize = .5, method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL) + 
+  scale_x_discrete(limits = c(17:30)) +
+  labs(title="Composite ACT Score by School",x="ACT Score (Mean)")
+```
+
+McHenry county ACT Scores (2017)
+```{r}
+mchenry_act <- rc17_six_county %>% filter(county == "McHenry", is.na(ACT_COMP_SCHOOL) == FALSE )
+mchenry_act$ACT_COMP_SCHOOL
+```
+
+Prospect
+```{r}
+prospect <- rc17_six_county %>% 
+  filter(str_detect(sch_name, "Prospect High School"))
+prospect_act <- prospect$ACT_COMP_SCHOOL
+prospect_act
+```
 
