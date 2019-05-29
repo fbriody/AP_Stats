@@ -13,24 +13,21 @@ rc17_six_county <- readr::read_csv("https://raw.githubusercontent.com/fbriody/da
 rc17<- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/ReportCard2017/rc17.csv")
 ```
 
+
+Total schools in each conty:
 ```{r}
-test two
+rc17_six_county %>% 
+     group_by(county) %>% 
+     summarise(n=sum(!is.na(sch_type_name))
+     ) %>% 
+arrange(desc(n))
 ```
 
-
-
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-
+Types of Schools in McHenry County - use to make freq chart, relfreq chart and bar chart:
 ```{r}
-plot(cars)
+mchenry_only <- filter(rc17_six_county, rc17_six_county$county == "McHenry")
+mchenry_types <- mchenry_only$dist_size_name
+mchenry_types
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
