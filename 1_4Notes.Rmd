@@ -14,7 +14,7 @@ rc17<- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/Re
 ```
 
 
-Total schools in each conty:
+Total schools in each county:
 ```{r}
 rc17_six_county %>% 
      group_by(county) %>% 
