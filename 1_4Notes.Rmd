@@ -1,24 +1,115 @@
 ---
-title: "POD: Chapter 1"
-output: html_notebook
-editor_options: 
+title: 'POD: Chapter 1'
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
+# Set Up and Import
+```{r}
+#install.packages("kableExtra") #makes tables look nice
+library(tidyverse)
+library(kableExtra)
+
+#removes semicolons by shortening column by 1
+plan_08_2019 <- read_fwf("rc17.txt", 
+         fwf_cols(SCHOOL_ID	= c(1,15),
+SCHOOL_TYPE_CODE 	= c(17,17),
+Blank	= c(19,19),
+SCHOOL_NAME		= c(20,52),
+DISTRICT_NAME	= c(54,86),
+CITY	= c(88,104),
+COUNTY	= c(106,116),
+DISTRICT_TYPE_CODE 	= c(118,118),
+DISTRICT_SIZE_CODE 	= c(120,120),
+DISTRICT_TYPE_NAME		= c(122,132),
+DISTRICT_SIZE_NAME		= c(134,139),
+SCHOOL_TYPE_NAME		= c(141,151),
+GRADES_IN_SCHOOL		= c(153,183),
+LEP_SCHOOL_PERCENT = c(385,389),
+TOTAL_SCHOOL_DAYS_SCHOOL = c(481,483),
+ACT_COMP_SCHOOL = c(2564,2567),
+AVG_CLASS_SIZE_SCHOOL_HS = c(2988,2991),
+LOC_PROP_TAXES = c(3712,3726),
+AVG_TEACH_SALARY = c(3596,3603),
+AVG_ADMIN_SALARY = c(3632,3639)),
+progress = TRUE)
+
+plan_08_2019$LOC_PROP_TAXES <- as.numeric(gsub('[$,]', '', plan_08_2019$LOC_PROP_TAXES ))
+plan_08_2019$AVG_TEACH_SALARY <- as.numeric(gsub('[$,]', '', plan_08_2019$AVG_TEACH_SALARY))
+plan_08_2019$AVG_ADMIN_SALARY <- as.numeric(gsub('[$,]', '', plan_08_2019$AVG_ADMIN_SALARY))
+```
+
+
 #1_4 Notes
+##Frequency and Relative Frequency Table
+```{r}
+school_type <- plan_08_2019 %>% 
+  count(SCHOOL_TYPE_NAME, sort = TRUE) %>% 
+  mutate(rel_freq = n/sum(n))
+school_type
+kable(school_type) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F)
+```
+
+##Bar Chart
+```{r}
+ggplot(plan_08_2019, aes(x=factor(SCHOOL_TYPE_NAME)))+
+  geom_bar(fill="steelblue")+
+  labs(title = "Frequency Bar Chart", x = "School Type")
+  theme_minimal()
+```
+
+##Relative Frequency Bar Chart
+```{r}
+ggplot(plan_08_2019, aes(x=factor(SCHOOL_TYPE_NAME), y = (..count..)/sum(..count..))) +
+  geom_bar(fill="firebrick4")+
+  labs(title = "Relative Frequency Bar Chart", x = "School Type", y = "proportion")
+  theme_minimal()
+```
+##Dotplot
+```{r}
+#Dotplot of just Cook County (Scale bad)
+plan_08_2019 %>% 
+  filter(COUNTY=="Will") %>% 
+  ggplot(mapping = aes(x=TOTAL_SCHOOL_DAYS_SCHOOL)) +
+  geom_dotplot(dotsize = .5, method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL)
+
+```
 
 ```{r}
-library(tidyverse)
-rc17_six_county <- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/ReportCard2017/rc17_six_county.csv")
-rc17<- readr::read_csv("https://raw.githubusercontent.com/fbriody/data/master/ReportCard2017/rc17.csv")
+plan_08_2019 %>% 
+  filter(COUNTY %in% c("McHenry", "Will")) %>% 
+  stripchart(COUNTY ~ TOTAL_SCHOOL_DAYS_SCHOOL, method = "stack", xlim = c(0,10), pch = 1)
+  
+
+plan_08_2019 %>% 
+  filter(COUNTY %in% c("Dupage", "Cook")) %>% 
+  ggplot(aes(x = AVG_CLASS_SIZE_SCHOOL_HS)) +
+  #ggplot(aes(x = ACT_COMP_SCHOOL)) +
+  geom_dotplot(binwidth = .7) +
+  theme_bw() +
+  facet_wrap(~ COUNTY, ncol = 1) +
+  labs(x = "Average Class Size", title = "Stacked Dotplot", y = "")
+  #ggplot(plan_08_2019, mapping = aes(x= TOTAL_SCHOOL_DAYS_SCHOOL, y = COUNTY)) + 
+  #geom_dotplot(binaxis='x', stackdir='center', binwidth = .1)
 ```
+
+#2_1 Notes
+
+
 
 
 Total schools in each county:
 ```{r}
-rc17_six_county %>% 
-     group_by(county) %>% 
-     summarise(n=sum(!is.na(sch_type_name))
+plan_08_2019 %>% 
+  filter(COUNTY %in% c("Cook", "Dupage","Kane", "Lake", "McHenry", "Will")) %>% 
+  filter(SCHOOL_TYPE_NAME == "HIGH SCHOOL") %>% 
+     group_by(COUNTY) %>% 
+     summarise(n=sum(!is.na(SCHOOL_TYPE_NAME))
      ) %>% 
 arrange(desc(n))
 ```
