@@ -1,6 +1,6 @@
-# AP_Stats
+# AP Statistics
 
-Code for AP Stats lessons; **a work in progres**.
+Code for AP Stats lessons; **a work in progres**. Refinements will be made in 2021 school year.
 
 Chapter numbers are from 
 
