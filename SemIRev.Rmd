@@ -1,0 +1,68 @@
+---
+title: "488SemIRev"
+author: "BRIODY"
+date: "12/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+install.packages("ISLR")
+install.packages("tidyverse")
+library(ISLR)
+library(tidyverse)
+
+summary(Hitters)
+
+Hitters %>% 
+  filter(Hitters$AtBat >199) %>% 
+  ggplot(mapping = aes(x= Salary)) +
+  geom_histogram(color = "Blue", fill = "LightBlue", breaks=seq(0,2700, by = 200)) + 
+  labs(x = "Salary (thousands)", y = "Players", title = "MLB Player Salaries in 1987") + 
+  scale_x_continuous(limits = c(0,2750) ,breaks = c(500, 1500,2500)) +
+  ggsave("salary.png")
+
+summary(Hitters$Salary)
+count(Hitters$Salary)
+view(Hitters)
+```
+
+
+yield problem
+```{r}
+time <- c(10,11,12,13,14,10,11,12,13,14)
+yield <- 	c(16.5,18.0,19.9,20.4,22.1,18.7,20.7,20.2,21.8,22.4)
+
+ggplot(mapping = aes(x= time, y = yield)) +
+  geom_point() + 
+  labs(x = "Time (minutes)", y = "Yield (percent)", title = "Chemical Reaction Yield Times") +
+  theme_minimal() + 
+  ggsave("yield.png")
+```
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

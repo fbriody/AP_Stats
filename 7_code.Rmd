@@ -1,0 +1,274 @@
+---
+title: "Ch7 Random Variables"
+author: "BRIODY"
+date: "12/3/2019"
+output: 
+  html_document:
+    toc: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+#7.2
+```{r}
+one_die <- sample(1:6, 10, replace = TRUE)
+
+```
+ 
+
+
+# 5.1 Correlation
+
+```{r}
+sixco %>% ggplot(mapping = aes(x= ATTENDANCE_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL)) +
+  geom_point()
+#above is curved up on right DONE
+
+sixco %>% ggplot(mapping = aes(x = DROPOUT_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL)) +
+  geom_point()
+#above is noisy need to limit x
+
+sixco %>% ggplot(mapping = aes(x = STUDENT_MOBILITY_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL)) +
+  geom_point()
+#curved down on left DONE
+
+sixco %>% ggplot(mapping = aes(x = CHRONIC_TRUANTS_num_SCHOOL, y = ACT_COMP_SCHOOL)) +
+  geom_point()
+#low_r slight negative DONE
+cor(sixco$CHRONIC_TRUANTS_num_SCHOOL, sixco$ACT_COMP_SCHOOL, use = "pairwise.complete.obs")
+
+model <- lm(sixco$CHRONIC_TRUANTS_num_SCHOOL ~ sixco$ACT_COMP_SCHOOL)
+summary(model)
+
+sixco %>% ggplot(mapping = aes(x = CHRONIC_TRUANTS_RATE_SCHOOL_per, y = ACT_COMP_SCHOOL)) +
+  geom_point(color="Blue") +
+  labs(x = "Chronically Truant (Percent)", 
+       y = "School ACT Composite")
+#1) moderate neg r DONE
+cor(sixco$CHRONIC_TRUANTS_RATE_SCHOOL_per,sixco$ACT_COMP_SCHOOL, use = "pairwise.complete.obs")
+
+sixco %>% ggplot(mapping = aes(x = DROPOUT_RATE_SCHOOL_perMALE, y = DROPOUT_RATE_SCHOOL_perFEMALE)) +
+  geom_point()
+#Strong pos r for F vs M Needs y=x line
+cor(is.na(sixco$DROPOUT_RATE_SCHOOL_perMALE),is.na(sixco$DROPOUT_RATE_SCHOOL_perFEMALE))
+
+sixco %>% ggplot(mapping = aes(x = STUDENT_MOBILITY_RATE_SCHOOL_perMALE, y = STUDENT_MOBILITY_RATE_SCHOOL_perFEMALE)) +
+  geom_point()
+#Strong pos r F v M needs y = x
+
+sixco %>% ggplot(mapping = aes(x = HS_4YEAR_GRAD_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL)) +
+  geom_point()
+#noisy / weak  would expect strong R
+
+sixco %>% ggplot(mapping = aes(x = HS_4YEAR_GRAD_RATE_SCHOOL_perMALE, y = HS_4YEAR_GRAD_RATE_SCHOOL_perFEMALE)) +
+  geom_point()
+#y=x line?
+
+```
+
+
+```{r}
+x <- c(1, 2, 3, 4,5)
+y <- c(2, 4, 6, 8, 15)
+
+r_derive <- tibble("x","y")
+
+ggplot(mapping = aes(x = x, y = y)) +
+  geom_point() +
+  labs(title = "The r Formua")
+
+
+```
+
+
+```{r}
+phs_value("DROPOUT_RATE_SCHOOL_perMALE")
+
+
+#female
+```
+
+
+
+# 5.2 Linear Regression
+### Scatterplot with best fit line
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+truant_n <- sixco %>% ggplot(mapping = aes(x = CHRONIC_TRUANTS_RATE_SCHOOL_per, y = ACT_COMP_SCHOOL)) +
+  geom_point(color="Blue") +
+  labs(x = "Chronically Truant (Percent)", 
+       y = "School ACT Composite", 
+       title = "Truancy and ACT Score", 
+       subtitle = "Six County High Schools")
+
+truant_n
+
+truant_n <- truant_n +
+  geom_smooth(method = lm, na.rm = TRUE, se = FALSE)
+
+truant_n
+```
+
+### Regression Output
+```{r}
+ACT_Truant <- lm(sixco$ACT_COMP_SCHOOL~sixco$CHRONIC_TRUANTS_RATE_SCHOOL_per)
+
+summary(ACT_Truant)
+print(ACT_Truant)
+```
+
+### Examining Residuals
+```{r}
+resid <- ACT_Truant$residuals
+resid_table <- data_frame(resid)
+
+view(resid_table)
+
+ggplot(data = resid_table, mapping = aes(y = resid)) + 
+  geom_boxplot(color = "Blue", fill = "lightBlue") + 
+  coord_flip()
+
+ggplot(data = resid_table, mapping = aes(x = resid)) + 
+  geom_histogram(bins = 40, color = "Blue", fill = "LightBlue")
+
+qqnorm(resid_table$resid, # plot
+       datax = TRUE, 
+       main = "Normal Q-Q Plot")
+
+qqline(resid_table$resid, #line
+       datax = TRUE, 
+       col = 4)
+
+```
+
+### Examining Standardized Residuals
+```{r}
+resid_table <- resid_table %>% 
+  mutate(std_resid = (resid-mean(resid))/sd(resid))
+
+view(resid_table)
+
+ggplot(data = resid_table, mapping = aes(y = resid_table$std_resid)) + 
+  geom_boxplot(color = "Blue", fill = "lightBlue") + 
+  coord_flip()
+
+ggplot(data = resid_table, mapping = aes(x = std_resid)) + 
+  geom_histogram(bins = 40, color = "Blue", fill = "LightBlue")
+
+qqnorm(resid_table$std_resid, # plot
+       datax = TRUE, 
+       main = "Normal Q-Q Plot")
+
+qqline(resid_table$std_resid, #line
+       datax = TRUE, 
+       col = 4)
+
+
+```
+
+
+```{r}
+x <- c(1, 2, 3, 4, 5)
+y <- c(2, 4, 6, 8, 15)
+
+lin_reg <- lm(y~x)
+
+summary(x)
+summary(lin_reg)
+```
+
+
+# 5.3 Assessing the Fit of a Line
+### Residual Plot
+#### Resid v Predicted
+#### ACT Composite v Chronic Truant (percent)
+```{r}
+ggplot(lm(sixco$ACT_COMP_SCHOOL~sixco$CHRONIC_TRUANTS_RATE_SCHOOL_per)) +
+  geom_point(mapping = aes(x = .fitted, y  = .resid)) + 
+  geom_hline(yintercept = 0, color = "Blue")  +
+  labs(x = "Predicted", y = "Residual")
+```
+
+#### ACT Comp v Attendance Rate All (percent)
+Guess the best fit line; probably way off due to influential point(s)
+```{r}
+sixco %>% ggplot(mapping = aes(x= ATTENDANCE_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL)) +
+  geom_point(aes(alpha = sixco$SCHOOL_TOTAL_ENROLLMENT)) + 
+  geom_smooth(method = lm, na.rm = TRUE, se = FALSE) +
+  labs(alpha = "Enrollment")
+
+ggplot(lm(sixco$ACT_COMP_SCHOOL~sixco$ATTENDANCE_RATE_SCHOOL_perALL)) + 
+  geom_point(mapping = aes(x = .fitted, y = .resid)) + 
+  geom_hline(yintercept = 0, color = "Blue") +
+  labs(x = "Predicted ACT Composite", 
+       y = "Residual", 
+       title = "Residual Plot for Predicting School ACT from School Attendance Rate (%)")
+
+```
+
+Regression Output
+```{r}
+summary(lm(sixco$ACT_COMP_SCHOOL~sixco$ATTENDANCE_RATE_SCHOOL_perALL))
+```
+
+
+
+Remove possible influential
+```{r}
+sixco %>% 
+  filter(ATTENDANCE_RATE_SCHOOL_perALL>50) %>% 
+  ggplot(mapping = aes(x= ATTENDANCE_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL, alpha = SCHOOL_TOTAL_ENROLLMENT)) +
+  geom_point() + 
+  geom_smooth(method = lm, na.rm = TRUE, se = FALSE)
+  
+```
+ Regression with influential removed
+```{r}
+sixco_removed <- sixco %>% 
+  filter(ATTENDANCE_RATE_SCHOOL_perALL>50) 
+
+  summary(lm(sixco_removed$ACT_COMP_SCHOOL~sixco_removed$ATTENDANCE_RATE_SCHOOL_perALL))
+```
+ 
+Add original regression line back
+```{r}
+sixco %>% 
+  filter(ATTENDANCE_RATE_SCHOOL_perALL>50) %>% 
+  ggplot(mapping = aes(x= ATTENDANCE_RATE_SCHOOL_perALL, y = ACT_COMP_SCHOOL, alpha = SCHOOL_TOTAL_ENROLLMENT)) +
+  geom_point() + 
+  geom_smooth(method = lm, na.rm = TRUE, se = FALSE) + 
+  geom_abline(intercept = -11.07428, slope = 0.34033, color = "Red") + 
+  geom_segment(aes(x = 62, xend = 98, 
+                   y = -11.07428+.34033*62, yend = -11.07428+.34033*99.5)) +
+  theme(legend.position = "none")
+
+```
+
+
+
+
+
+# 5.4 Nonlinear Relationships and Transformations
+
+# 5.5 Communication
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
