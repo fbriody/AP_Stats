@@ -1,0 +1,157 @@
+---
+title: "Introduction to Statistics"
+output: 
+  learnr::tutorial:
+    css: css/learnrcss.css
+    progressive: true
+    code_folding: hide
+runtime: shiny_prerendered
+
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Reasons to Study Statistics
+
+> “I keep saying that the sexy job in the next 10 years will be statisticians. And I’m not kidding."
+- *Google's Chief Economist Hal Varian  (1990)*
+
+
+### Video
+ 
+ **Three Reasons to Study Statistics** video (120000 minutes):
+![](https://youtu.be/tsGoeo9_qt4) 
+
+### Questions
+
+```{r c1_s1_q1, echo=FALSE}
+question("You would expect to use *statistics* in which of the following industries?",
+  answer("Education"),
+  answer("Medicine"),
+  answer("Business"),
+  answer("All of the Above", correct = TRUE)
+)
+```
+```{r c1_s1_q2, echo=FALSE}
+question("Which of the following was **NOT** given as a reason to study statistics in the video?",
+  answer("Setting insurance rates"),
+  answer("Researching environmental changes"),
+  answer("Statistics is a rewarding career", correct = TRUE),
+  answer("Uderstanding governement matters"),
+  answer("All were given as reasons in the video")
+)
+```
+
+## Variability
+
+> "Statistics is the science of using data to make decisions. This is relevant in almost all fields of work and there are many opportunities for employment." - *US News & World Report* (2020) 
+
+image 1
+
+<hr>
+
+Suppose 200 samples of water were used to estimate the contamination level in well water. Click the first "Run Code" button.  Using the resulting plot, if the most recent sample had a reading of 17 PPB would you be concerned about the current contamination level in the well? (You can ignore the code used to plot the samples.)
+```{r wellwater1, exercise = TRUE, exercise.lines = 2}
+x<-rnorm(200,14,2)
+hist(x,main="Well Water Contamination\n200 Samples",xlab="PPB",xlim=c(8,20),col="LightBlue")
+```
+
+A second 200 samples were taken. Run the code again using the button below to generate 200 more samples. Does you answer change?
+```{r wellwater2, include=FALSE, exercise = TRUE}
+x<-rnorm(200,14,1)
+hist(x,main="Well Water Contamination\n200 Samples",xlab="PPB",xlim=c(8,20),col="LightBlue")
+```
+
+Finally, look at 200 more samples. 
+```{r wellwater3, include=FALSE, exercise = TRUE}
+x<-rnorm(200,14,0.5)
+hist(x,main="Well Water Contamination\n200 Samples",xlab="PPB",xlim=c(8,20),col="LightBlue")
+```
+
+The only difference between the three situations was the **variability** in the samples. A sample of 17 PPB in the first is not particularly worrisome, but certainly a cause for further investigation in the third situation. Displaying data and observing patterns in variability help us draw conclusions, make decisions and encourage further analysis.  
+
+:::obj
+**SUMMARY** The ability to recognize unusual values using *variability* is the foundation of statistics. It allows us to calculate the chance of being incorrect when a decision is based on *sample* data.  
+:::
+
+
+<hr>
+
+## Statistics & Data Analysis
+
+## Types of Data & Simple Displays
+
+### Vocabulary
+
+Data is **univariate** if it represents a single list of values, either numbers or words or labels. Variables can be **categorical** if they represent groups or **numeric** if they represents measurements. Numeric are **discrete** if only certain values are possible (such as 0 or 1 or 2 pets) or **continuous** if possible values can be along an entire range of values (such as a person's height). Note that even though some continuous are often rounded into discrete, like a person's height, the underlying variable is still considered continuous. 
+  
+Tallied responses, like votes for candidates, can be organized in a **frequency** table of counts or a **relative frequency** list representing proportions. 
+
+
+
+## Topic 1
+
+### Exercise 
+
+*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+### Exercise with Code
+
+*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+
+Now write a function that adds any two numbers and then call it:
+
+```{r add-function, exercise=TRUE, exercise.lines = 5}
+add <- function() {
+  
+}
+```
+
+## Topic 2
+
+### Exercise with Hint
+
+*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+
+Modify the following code to limit the number of rows printed to 5:
+
+```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
+mtcars
+```
+
+```{r print-limit-hint}
+head(mtcars)
+```
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools")
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    answer("grid", correct = TRUE)
+  )
+)
+```
+

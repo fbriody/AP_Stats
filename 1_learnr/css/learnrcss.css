@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Lora:400,400i&display=swap');
+
+div.note, div.tip, div.gotcha, div.design, div.hat, div.obj{
+  border: 4px #ADD8E6;
+  border-style: solid;
+  padding: 1em;
+  margin: 1em 0;
+  /*uncomment for icon */
+  
+  /* padding-left: 100px; 
+  background-size: 70px; 
+  background-repeat: no-repeat;
+  background-position: 15px center; */
+  min-height: 120px;
+  color: #638f9d;
+  background-color: #ffffff;
+}
+
+div.obj {
+  font-size: 16px;
+  line-height: 1.5em;
+  /*background-image: url("../images/arrow.png");*/
+}
+
+div.obj>p:first-child {
+  padding-top: 0;
+  margin-top: 0 !important;
+  font-family: "Source Sans Pro"; 
+  /*text-transform: uppercase;*/
+  letter-spacing: 0.1em;
+}
+
+blockquote {
+  margin: 0 0 0 0 !important;
+  padding: 0.5px 21px;  /* I changed from default of 10.5px 21px*/
+}
+
+.blockquote-note {
+  color: #777777;
+  background-color: #f6f3f3;
+  width: 90%;
+  margin: 0 auto;
+}
